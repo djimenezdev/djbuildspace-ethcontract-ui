@@ -1,0 +1,40 @@
+{
+  "name": "djbuildspace-ethcontract-ui",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "craco eject"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.1.0",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@fontsource/aleo": "^4.5.7",
+    "@fontsource/cousine": "^4.5.8",
+    "@mdi/js": "^6.7.96",
+    "@mdi/react": "^1.6.0",
+    "axios": "^0.27.2",
+    "ethers": "^5.6.7",
+    "formik": "^2.2.9",
+    "framer-motion": "^6",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-google-recaptcha": "^2.1.0",
+    "react-router-dom": "6",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^14.2.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^1.3.0",
+    "jsdom": "^19.0.0",
+    "vite": "^2.9.9",
+    "vitest": "^0.12.9"
+  }
+}

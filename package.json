@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.1.0",
+    "@craco/craco": "^6.4.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@fontsource/aleo": "^4.5.7",

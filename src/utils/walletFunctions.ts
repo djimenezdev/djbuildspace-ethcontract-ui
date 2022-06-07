@@ -1,28 +1,28 @@
 import { ethers } from 'ethers';
 import { contractAddress, contractABI } from '@utils/variables';
 
+const ethereumExists = (toast: any) => {
+  const { ethereum } = window;
+
+  if (!ethereum) {
+    toast({
+      id: 'toast-noMetaMask',
+      title: 'Metamask not detected',
+      description: 'Make sure to have the chrome installed with valid wallet!',
+      status: 'error',
+      duration: 6000,
+      isClosable: true,
+      position: 'top',
+    });
+    return null;
+  }
+  return ethereum;
+};
+
 export const checkIfWalletIsConnected = async (dispatch: any, toast: any) => {
   try {
-    // the window.ethereum object is only added to the window object if metamask is installed
-    const { ethereum } = window;
-
-    if (!ethereum) {
-      toast({
-        id: 'toast-noMetaMask',
-        title: 'Metamask not detected',
-        description:
-          'Make sure to have the chrome installed with valid wallet!',
-        status: 'error',
-        duration: 6000,
-        isClosable: true,
-        position: 'top',
-      });
-      return;
-    }
-
-    /*
-     * Check if we're authorized to access the user's wallet
-     */
+    const ethereum = ethereumExists(toast);
+    if (!ethereum) return;
     const accounts = await ethereum.request({ method: 'eth_accounts' });
 
     if (accounts.length !== 0) {
@@ -127,20 +127,8 @@ export const checkIfWalletIsConnected = async (dispatch: any, toast: any) => {
  */
 export const connectWallet = async (dispatch: any, toast: any) => {
   try {
-    const { ethereum } = window;
-    if (!ethereum) {
-      toast({
-        title: 'Metamask not detected',
-        description:
-          'Make sure to have the chrome installed with valid wallet!',
-        status: 'error',
-        duration: 6000,
-        isClosable: true,
-        position: 'top',
-      });
-      return;
-    }
-
+    const ethereum = ethereumExists(toast);
+    if (!ethereum) return;
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
 
     dispatch({ type: 'SET_ACCOUNT', setAccount: accounts[0] });
@@ -152,7 +140,7 @@ export const connectWallet = async (dispatch: any, toast: any) => {
 
 export const changeChain = async (dispatch: any, toast: any) => {
   try {
-    const { ethereum } = window;
+    const ethereum = ethereumExists(toast);
     const chainId = await ethereum.request({
       method: 'wallet_switchEthereumChain',
       params: [
@@ -164,5 +152,52 @@ export const changeChain = async (dispatch: any, toast: any) => {
     checkIfWalletIsConnected(dispatch, toast);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const checkChain = async (
+  dispatch: any,
+  toast: any,
+  currentAccount: string
+) => {
+  const ethereum = ethereumExists(toast);
+  if (!ethereum) return;
+  if (currentAccount) {
+    ethereum.on('chainChanged', (chainId: string) => {
+      const toastId = 'chain-error';
+      if (parseInt(chainId, 16) !== 4) {
+        if (!toast.isActive(toastId)) {
+          toast({
+            id: toastId,
+            title: 'Wrong Chain',
+            description: 'Make sure to be on the Rinkeby Testnet to Wave!',
+            status: 'error',
+            duration: 6000,
+            isClosable: true,
+            position: 'top',
+          });
+        }
+        dispatch({ type: 'SET_CHAIN', setChain: parseInt(chainId, 16) });
+        dispatch({ type: 'SET_WAVES', newWave: [] });
+        dispatch({ type: 'SET_TOTAL', setTotalWaves: null });
+        dispatch({ type: 'SET_USER_WAVES', setUserWaves: null });
+        return;
+      }
+    });
+  }
+};
+
+export const accountChange = async (
+  dispatch: any,
+  toast: any,
+  currentAccount: string
+) => {
+  const ethereum = ethereumExists(toast);
+  if (!ethereum) return;
+  if (currentAccount) {
+    ethereum.on('accountsChanged', (accounts: string[]) => {
+      dispatch({ type: 'SET_ACCOUNT', setAccount: accounts[0] });
+      checkIfWalletIsConnected(dispatch, toast);
+    });
   }
 };

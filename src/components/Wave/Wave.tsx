@@ -6,7 +6,9 @@ import WaveInput from '@comp/Wave/WaveInput';
 import Waves from '@comp/Wave/Waves';
 import WaveInfo from '@comp/Wave/WaveInfo';
 import {
+  accountChange,
   changeChain,
+  checkChain,
   checkIfWalletIsConnected,
   connectWallet,
 } from '@utils/walletFunctions';
@@ -27,6 +29,16 @@ const Wave = () => {
   useEffect(() => {
     checkIfWalletIsConnected(dispatch, toast);
   }, []);
+
+  // detects if user changed chain
+  useEffect(() => {
+    checkChain(dispatch, toast, currentAccount);
+  }, [currentAccount]);
+
+  // update content for different account if switching
+  useEffect(() => {
+    accountChange(dispatch, toast, currentAccount);
+  }, [currentAccount]);
 
   // sets countdown for when user can wave again
   useEffect(() => {

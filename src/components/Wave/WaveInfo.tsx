@@ -7,8 +7,9 @@ const WaveInfo = ({
 }: {
   countDown: { minutes: number | null; seconds: number | null } | undefined;
 }) => {
-  const [{ totalWaves, userWaves, waveWaitTime, currentAccount }] =
-    useStateValue();
+  const [
+    { totalWaves, userWaves, waveWaitTime, currentAccount, currentChain },
+  ] = useStateValue();
   const { colorMode } = useColorMode();
   return (
     <Box my='10px' display='flex' justifyContent='center'>
@@ -46,6 +47,7 @@ const WaveInfo = ({
       </Text>
       {waveWaitTime > 0 &&
         currentAccount &&
+        currentChain === 4 &&
         typeof countDown?.minutes === 'number' &&
         countDown?.minutes > 0 &&
         typeof countDown?.seconds === 'number' &&
